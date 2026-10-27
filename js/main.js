@@ -43,6 +43,7 @@ const playTerminal = async term => {
   user.hidden = true;
   reply.hidden = true;
   status.hidden = true;
+  root.classList.remove('term-pending');
 
   // 1. type the question into the input box, then "press enter"
   await sleep(700);

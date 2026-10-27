@@ -62,6 +62,8 @@
       try { saved = localStorage.getItem('theme'); } catch (e) {}
       var theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
       document.documentElement.dataset.theme = theme;
+      // the terminal replays itself; hide its finished state before first paint so it doesn't flash
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('term-pending');
     })();
   </script>
   <script src="js/main.js" defer></script>

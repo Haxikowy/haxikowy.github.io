@@ -327,6 +327,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .term [hidden] { display: none; }
 
+/* set in <head> before first paint, removed by main.js once the replay starts.
+   visibility keeps the layout (the script measures it); the delayed reveal is a failsafe if JS never runs */
+.term-pending .term :is(.js-user, .js-reply, .js-status) {
+  visibility: hidden;
+  animation: term-reveal 0s 3s forwards;
+}
+@keyframes term-reveal { to { visibility: visible; } }
+
 @media (max-width: 479px) {
   .term { font-size: .64rem; }
   .term__body { padding: 1em .85em .9em; }
