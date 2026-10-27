@@ -1,0 +1,12 @@
+{
+  "name": "Szymon Dolnik · Product Engineer",
+  "short_name": "haxikowy",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#1c1c1c",
+  "theme_color": "#1c1c1c",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
