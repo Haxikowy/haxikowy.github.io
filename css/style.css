@@ -48,7 +48,7 @@
   --fz-xl: clamp(2.25rem, 1.4rem + 4vw, 4.25rem);
 
   --radius: 10px;
-  --max-w: 72rem;
+  --max-w: 87.5rem; /* ~1400px */
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 
@@ -239,7 +239,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   box-shadow: var(--shadow);
   font-family: var(--font-code);
   font-size: clamp(.68rem, .58rem + .4vw, .9rem);
-  line-height: 1.45;
+  line-height: 1.7;
 }
 [data-theme='light'] .term {
   --term-bg: #ffffff;
@@ -273,15 +273,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   pointer-events: none;
 }
 
-/* history grows upward; the input box stays pinned to the bottom like a chat CLI.
-   The body keeps the shape of a default 80×24 window: 80 cols × 0.6em by 24 rows × 1.2em = 5:3 */
+/* history grows upward; the input box stays pinned to the bottom like a chat CLI */
 .term__body {
-  aspect-ratio: 5 / 3;
-  overflow: hidden; /* strict ratio: anything extra scrolls off the top, like a real terminal */
+  flex: 1;
   display: grid;
   align-content: end;
-  gap: .65em;
-  padding: .9em 1.25em .8em;
+  gap: .9em;
+  padding: 1.1em 1.25em 1em;
 }
 
 .term__user { color: var(--text-muted); }
@@ -321,7 +319,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .term__chevron { color: var(--text-muted); }
 
 .term__hint {
-  margin-top: -.45em;
+  margin-top: -.6em;
   padding-left: .9em;
   font-size: .85em;
   color: var(--comment);
@@ -331,8 +329,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 @media (max-width: 479px) {
   .term { font-size: .64rem; }
-  .term__body { padding: .8em .85em .7em; gap: .55em; }
-  .term__hint { display: none; }
+  .term__body { padding: 1em .85em .9em; }
   .term__reply { grid-template-columns: 1.2em 1fr; }
 }
 
