@@ -15,6 +15,21 @@ document.querySelector('.js-year').textContent = new Date().getFullYear();
 // The finished state lives in the HTML; this only replays it, so no-JS and reduced motion see it as is.
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const rand = (min, max) => min + Math.random() * (max - min);
+const pick = list => list[Math.floor(Math.random() * list.length)];
+
+// [while working, once done]
+const verbs = [
+  ['Thinking', 'Thought'],
+  ['Pondering', 'Pondered'],
+  ['Brewing', 'Brewed'],
+  ['Cooking', 'Cooked'],
+  ['Baking', 'Baked'],
+  ['Churning', 'Churned'],
+  ['Crunching', 'Crunched'],
+  ['Noodling', 'Noodled'],
+  ['Percolating', 'Percolated'],
+  ['Cogitating', 'Cogitated'],
+];
 
 const textNodesOf = el => {
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
@@ -59,11 +74,14 @@ const playTerminal = async term => {
   const start = performance.now();
   const frames = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢'];
   let frame = 0;
-  let label = 'Thinking…';
+  const [working, done] = pick(verbs);
+  const meta = document.createElement('span');
+  meta.className = 'term__meta';
+  statusText.replaceChildren(`${working}… `, meta);
   const tick = () => {
     spinner.textContent = frames[frame++ % frames.length];
     const secs = Math.floor((performance.now() - start) / 1000);
-    statusText.textContent = `${label} (${secs}s · esc to interrupt)`;
+    meta.textContent = `(${secs}s · esc to interrupt)`;
   };
   spinner.classList.add('is-spinning');
   status.hidden = false;
@@ -72,7 +90,6 @@ const playTerminal = async term => {
   await sleep(1300);
 
   // 3. stream the answer in small token-sized chunks
-  label = 'Generating…';
   reply.hidden = false;
   for (const { node, text } of outputNodes) {
     let i = 0;
@@ -86,7 +103,9 @@ const playTerminal = async term => {
   clearInterval(timer);
   spinner.classList.remove('is-spinning');
   spinner.textContent = '✻';
-  statusText.textContent = `Worked for ${((performance.now() - start) / 1000).toFixed(1)}s`;
+  const secs = ((performance.now() - start) / 1000).toFixed(1);
+  const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  statusText.textContent = `${done} for ${secs}s · done ${time}`;
   term.style.minWidth = '';
   term.style.minHeight = '';
 };

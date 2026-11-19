@@ -54,18 +54,28 @@
 
 :root,
 :root[data-theme='dark'] {
-  --bg: #1c1c1c;
-  --surface: #262627;
-  --border: #38383b;
-  --text: #e3e6e8;
-  --text-muted: #8a949c;
-  --comment: hsl(207, 10%, 40%);
-  --hl: #f92472;
-  --orange: #fd9621;
-  --green: #b0ec36;
-  --t-str: hsl(54, 70%, 68%);
-  --t-num: hsl(261, 100%, 75%);
-  --on-hl: #fff;
+  --bg: #282a36;
+  --surface: #343746;
+  --border: #44475a;
+  --text: #f8f8f2;
+  --text-muted: color-mix(in srgb, #f8f8f2 55%, #6272a4); /* foreground + comment, 7:1 on bg */
+  --comment: #6272a4;
+  --hl: #ff79c6;
+  --orange: #ffb86c;
+  --green: #50fa7b;
+  --t-str: #f1fa8c;
+  --t-num: #bd93f9;
+  --t-prop: var(--text);
+  --t-punc: var(--hl);
+  --t-brace: var(--text);
+  --t-var: #bd93f9;
+  --t-params: var(--hl);
+  --logo-dot: var(--text);
+  --term-muted: var(--comment);
+  --term-text: color-mix(in srgb, var(--text) 20%, var(--comment));
+  --nick: var(--green);
+  --nick-at: var(--text);
+  --on-hl: #282a36;
   --shadow: 0 2px 4px hsl(0 0% 0% / .2), 0 12px 24px hsl(0 0% 0% / .25);
 }
 
@@ -81,6 +91,16 @@
   --green: #3f8a3e;
   --t-str: hsl(119, 34%, 38%);
   --t-num: hsl(261, 60%, 52%);
+  --t-prop: var(--orange);
+  --t-punc: var(--orange);
+  --t-brace: var(--orange);
+  --t-var: var(--text);
+  --t-params: var(--orange);
+  --logo-dot: var(--hl);
+  --term-muted: var(--text-muted);
+  --term-text: var(--text-muted);
+  --nick: var(--text-muted);
+  --nick-at: var(--hl);
   --on-hl: #fff;
   --shadow: 0 2px 4px hsl(0 0% 0% / .04), 0 12px 24px hsl(0 0% 0% / .06);
 }
@@ -121,7 +141,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (min-width: 700px) { .container { padding-inline: 2rem; } }
 
 .c-hl { color: var(--hl); }
-.c-orange { color: var(--orange); }
+.c-var { color: var(--t-var); }
+.c-dot { color: var(--logo-dot); }
+.c-prop { color: var(--t-prop); }
 
 .icon {
   width: 1.25em;
@@ -178,9 +200,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__nick {
   font-family: var(--font-code);
   font-size: var(--fz-m);
-  color: var(--text-muted);
+  color: var(--nick);
 }
-.hero__nick::before { content: '@'; color: var(--hl); }
+.hero__nick::before { content: '@'; color: var(--nick-at); }
 
 .hero__name {
   margin-block: .1em .15em;
@@ -228,8 +250,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* ---------- terminal (Apple Terminal window, AI-CLI chat inside) ---------- */
 .term {
-  --term-bg: #1e1e1f;
-  --term-bar: #323234;
+  --text-muted: var(--term-muted);
+  --term-bg: #21222c;
+  --term-bar: #191a21;
+  --dot-red: #ec6765;
+  --dot-yellow: #f2ca44;
+  --dot-green: #65c466;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -244,6 +270,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 [data-theme='light'] .term {
   --term-bg: #ffffff;
   --term-bar: #ececec;
+  --dot-red: #ff5f57;
+  --dot-yellow: #febc2e;
+  --dot-green: #28c840;
 }
 
 .term__bar {
@@ -259,9 +288,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   width: 3.25rem;
   height: .75rem;
   background:
-    radial-gradient(circle at 6px 50%, #ff5f57 5.5px, transparent 6px),
-    radial-gradient(circle at 26px 50%, #febc2e 5.5px, transparent 6px),
-    radial-gradient(circle at 46px 50%, #28c840 5.5px, transparent 6px);
+    radial-gradient(circle at 6px 50%, var(--dot-red) 5.5px, transparent 6px),
+    radial-gradient(circle at 26px 50%, var(--dot-yellow) 5.5px, transparent 6px),
+    radial-gradient(circle at 46px 50%, var(--dot-green) 5.5px, transparent 6px);
 }
 .term__title {
   position: absolute;
@@ -282,7 +311,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding: 1.1em 1.25em 1em;
 }
 
-.term__user { color: var(--text-muted); }
+.term__user { color: var(--term-text); }
 
 .term__reply {
   display: grid;
@@ -303,8 +332,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   scrollbar-width: none;
 }
 
-.term__status { color: var(--orange); }
-.term__status .js-status-text { color: var(--text-muted); }
+.term__status { color: var(--term-text); }
+/* spinner and label light up while working, then dim with the rest */
+.term__status:has(.is-spinning) { color: var(--orange); }
+.term__meta { color: var(--term-text); }
 .term__spinner { display: inline-block; width: 1em; }
 .term__spinner.is-spinning { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .45; } }
@@ -341,9 +372,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .term__reply { grid-template-columns: 1.2em 1fr; }
 }
 
-.t-var { color: var(--text); }
-.t-prop,
-.t-punc { color: var(--orange); }
+.t-var { color: var(--t-var); }
+.t-prop { color: var(--t-prop); }
+.t-punc { color: var(--t-punc); }
+.t-brace { color: var(--t-brace); }
+.t-params { color: var(--t-params); }
 .t-op { color: var(--hl); }
 .t-fn { color: var(--green); }
 .t-str { color: var(--t-str); }
