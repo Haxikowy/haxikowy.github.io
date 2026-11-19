@@ -2,10 +2,44 @@ const root = document.documentElement;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ---------- theme toggle ----------
-document.querySelector('.theme-toggle').addEventListener('click', () => {
+const toggle = document.querySelector('.theme-toggle');
+let switching = false; // overlapping transitions cancel each other and leave the page half-switched
+toggle.addEventListener('click', () => {
+  if (switching) return;
   const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  root.dataset.theme = next;
-  try { localStorage.setItem('theme', next); } catch (e) {}
+  const apply = () => {
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  };
+  if (!document.startViewTransition || reduceMotion) return apply();
+
+  // light grows out of the toggle as a circle, and shrinks back into it when going dark
+  const toLight = next === 'light';
+  const { left, top, width, height } = toggle.getBoundingClientRect();
+  const x = left + width / 2;
+  const y = top + height / 2;
+  const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const clip = [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`];
+  switching = true;
+  root.classList.add('theme-switching', toLight ? 'to-light' : 'to-dark');
+  const transition = document.startViewTransition(apply);
+  let reveal;
+  transition.ready.then(() => {
+    reveal = root.animate(
+      { clipPath: toLight ? clip : clip.reverse() },
+      {
+        duration: 650,
+        easing: 'cubic-bezier(.65, 0, .35, 1)',
+        fill: 'forwards', // otherwise the shrunk light page pops back for a frame before the transition ends
+        pseudoElement: toLight ? '::view-transition-new(root)' : '::view-transition-old(root)',
+      },
+    );
+  }).catch(() => {}); // rejects when the browser skips the transition; the theme still applies
+  transition.finished.finally(() => {
+    reveal?.cancel(); // a kept (fill: forwards) animation would also clip the next transition's snapshots
+    root.classList.remove('theme-switching', 'to-light', 'to-dark');
+    switching = false;
+  });
 });
 
 // ---------- footer year ----------

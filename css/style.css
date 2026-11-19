@@ -193,6 +193,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 [data-theme='dark'] .icon--moon,
 [data-theme='light'] .icon--sun { opacity: 0; transform: rotate(-90deg) scale(.5); }
 
+/* theme switch: the browser snapshots the old page and the circle in main.js reveals the new one */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+.theme-switching body { transition: none; }
+/* going dark, the old light page sits on top while it shrinks away */
+.to-dark::view-transition-old(root) { z-index: 1; }
+
 /* ---------- hero ---------- */
 .hero {
   flex: 1;
