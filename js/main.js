@@ -75,9 +75,12 @@ const playTerminal = async term => {
   const frames = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢'];
   let frame = 0;
   const [working, done] = pick(verbs);
+  const verb = document.createElement('span');
+  verb.className = 'term__verb';
+  verb.textContent = `${working}…`;
   const meta = document.createElement('span');
   meta.className = 'term__meta';
-  statusText.replaceChildren(`${working}… `, meta);
+  statusText.replaceChildren(verb, ' ', meta);
   const tick = () => {
     spinner.textContent = frames[frame++ % frames.length];
     const secs = Math.floor((performance.now() - start) / 1000);

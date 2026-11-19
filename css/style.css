@@ -65,11 +65,16 @@
   --green: #50fa7b;
   --t-str: #f1fa8c;
   --t-num: #bd93f9;
+  --t-fn: var(--green);
+  --t-assign: var(--hl);
   --t-prop: var(--text);
   --t-punc: var(--hl);
   --t-brace: var(--text);
   --t-var: #bd93f9;
-  --t-params: var(--hl);
+  --t-bracket: var(--hl);
+  --logo-obj: var(--t-var);
+  --spin: #d77757; /* Claude Code's dark theme */
+  --spin-shimmer: #eb9f7f;
   --logo-dot: var(--text);
   --term-muted: var(--comment);
   --term-text: color-mix(in srgb, var(--text) 20%, var(--comment));
@@ -81,26 +86,31 @@
 
 :root[data-theme='light'] {
   --bg: #fafafa;
-  --surface: #f0f0f1;
-  --border: #dcdcdf;
+  --surface: #eaeaeb;
+  --border: #dbdbdc;
   --text: #383a42;
-  --text-muted: #6b6d75;
-  --comment: hsl(230, 4%, 64%);
-  --hl: #3a6fe0;
-  --orange: #986801;
-  --green: #3f8a3e;
-  --t-str: hsl(119, 34%, 38%);
-  --t-num: hsl(261, 60%, 52%);
-  --t-prop: var(--orange);
-  --t-punc: var(--orange);
-  --t-brace: var(--orange);
-  --t-var: var(--text);
-  --t-params: var(--orange);
-  --logo-dot: var(--hl);
-  --term-muted: var(--text-muted);
+  --text-muted: #696c77;
+  --comment: #a0a1a7;
+  --hl: #99329f;
+  --orange: #916a22;
+  --green: #659f59;
+  --t-str: var(--green);
+  --t-num: var(--orange);
+  --t-fn: #4e77ea;
+  --t-assign: #3982b7;
+  --t-prop: #d46050;
+  --t-punc: var(--t-assign);
+  --t-brace: #1330f0;
+  --t-var: var(--orange);
+  --t-bracket: var(--green);
+  --logo-obj: var(--text);
+  --spin: #d77757; /* Claude Code's light theme */
+  --spin-shimmer: #f59575;
+  --logo-dot: var(--text);
+  --term-muted: var(--comment);
   --term-text: var(--text-muted);
-  --nick: var(--text-muted);
-  --nick-at: var(--hl);
+  --nick: var(--t-fn);
+  --nick-at: var(--text);
   --on-hl: #fff;
   --shadow: 0 2px 4px hsl(0 0% 0% / .04), 0 12px 24px hsl(0 0% 0% / .06);
 }
@@ -141,7 +151,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (min-width: 700px) { .container { padding-inline: 2rem; } }
 
 .c-hl { color: var(--hl); }
-.c-var { color: var(--t-var); }
+.c-var { color: var(--logo-obj); }
 .c-dot { color: var(--logo-dot); }
 .c-prop { color: var(--t-prop); }
 
@@ -269,7 +279,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 [data-theme='light'] .term {
   --term-bg: #ffffff;
-  --term-bar: #ececec;
+  --term-bar: #eaeaeb;
   --dot-red: #ff5f57;
   --dot-yellow: #febc2e;
   --dot-green: #28c840;
@@ -334,7 +344,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .term__status { color: var(--term-text); }
 /* spinner and label light up while working, then dim with the rest */
-.term__status:has(.is-spinning) { color: var(--orange); }
+.term__status:has(.is-spinning) { color: var(--spin); }
+/* lighter band sweeping right to left, like Claude Code's thinking label */
+.term__verb {
+  background: linear-gradient(90deg, var(--spin) 40%, var(--spin-shimmer) 50%, var(--spin) 60%) 0 0 / 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+@keyframes shimmer { to { background-position: 100% 0; } }
 .term__meta { color: var(--term-text); }
 .term__spinner { display: inline-block; width: 1em; }
 .term__spinner.is-spinning { animation: pulse 1.2s ease-in-out infinite; }
@@ -376,9 +395,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .t-prop { color: var(--t-prop); }
 .t-punc { color: var(--t-punc); }
 .t-brace { color: var(--t-brace); }
-.t-params { color: var(--t-params); }
+.t-bracket { color: var(--t-bracket); }
 .t-op { color: var(--hl); }
-.t-fn { color: var(--green); }
+.t-fn { color: var(--t-fn); }
+.t-assign { color: var(--t-assign); }
 .t-str { color: var(--t-str); }
 .t-num { color: var(--t-num); }
 .term a.t-str:hover { text-decoration: underline; }
